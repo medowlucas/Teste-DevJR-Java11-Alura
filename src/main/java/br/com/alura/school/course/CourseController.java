@@ -7,6 +7,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -22,7 +23,11 @@ class CourseController {
 
     @GetMapping("/courses")
     ResponseEntity<List<CourseResponse>> allCourses() {
-        return ResponseEntity.ok().build();
+        List<Course> courses = courseRepository.findAll();
+        List<CourseResponse> coursesResponseList = courses.stream()
+            .map(CourseResponse::new)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(coursesResponseList);
     }
 
     @GetMapping("/courses/{code}")
