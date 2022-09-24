@@ -10,13 +10,13 @@ import javax.validation.constraints.Size;
 
 class NewUserRequest {
 
-    @Unique(entity = User.class, field = "username")
+    // @Unique(entity = User.class, field = "username")
     @Size(max=20)
     @NotBlank
     @JsonProperty
     private final String username;
 
-    @Unique(entity = User.class, field = "email")
+    // @Unique(entity = User.class, field = "email")
     @NotBlank
     @Email
     @JsonProperty

@@ -8,13 +8,13 @@ import javax.validation.constraints.Size;
 
 class NewCourseRequest {
 
-    @Unique(entity = Course.class, field = "code")
+    // @Unique(entity = Course.class, field = "code")
     @Size(max=10)
     @NotBlank
     @JsonProperty
     private final String code;
 
-    @Unique(entity = Course.class, field = "name")
+    // @Unique(entity = Course.class, field = "name")
     @Size(max=20)
     @NotBlank
     @JsonProperty
