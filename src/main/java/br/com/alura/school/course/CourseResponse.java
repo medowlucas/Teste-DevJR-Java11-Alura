@@ -18,14 +18,14 @@ class CourseResponse {
     @JsonProperty
     private final String shortDescription;
 
-    @JsonProperty
-    private final List<Section> sections;
+    // @JsonProperty
+    // private final List<Section> sections;
 
     CourseResponse(Course course) {
         this.code = course.getCode();
         this.name = course.getName();
         this.shortDescription = Optional.of(course.getDescription()).map(this::abbreviateDescription).orElse("");
-        this.sections = course.getSectionList();
+        // this.sections = course.getSectionList();
     }
 
     private String abbreviateDescription(String description) {

@@ -1,19 +1,22 @@
 package br.com.alura.school.video;
 
 import br.com.alura.school.section.Section;
-import br.com.alura.school.support.validation.Unique;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name="videos")
+@Table(uniqueConstraints={ @UniqueConstraint(columnNames = {"video", "section"}) }) 
 public class Video {
 
     @Id
@@ -21,10 +24,11 @@ public class Video {
     private Long id;
 
     @NotBlank(message = "O campo video é obrigatório")
-    // @Unique(entity = Section.class, field = "video", message = "O vídeo code precisa ser único")
     private String video;
 
     @ManyToOne
+    @JoinColumn(name = "videoList", nullable = false)
+    @JsonIgnore
     private Section section;
 
     protected Video() { }

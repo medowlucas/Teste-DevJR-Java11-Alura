@@ -43,10 +43,9 @@ public class Section {
     @NotBlank
     private String authorUsername;
 
-    @OneToMany(mappedBy = "section", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "section", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Video> videoList = new ArrayList<Video>();
 
-  
     @ManyToOne
     @JoinColumn(name = "course", nullable = false)
     @JsonIgnore
@@ -60,7 +59,6 @@ public class Section {
         this.title = title;
         this.authorUsername = authorUsername;
     }
-
 
     public Long getId() {
         return this.id;
@@ -109,6 +107,5 @@ public class Section {
     public void setCourse(Course course) {
         this.course = course;
     }
-
 
 }
