@@ -7,7 +7,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-
 class NewUserRequest {
 
     @Unique(entity = User.class, field = "username", message = "Já existe um usuário com esse username cadastrado")

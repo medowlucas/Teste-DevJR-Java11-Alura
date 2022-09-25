@@ -2,9 +2,9 @@ package br.com.alura.school.course;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import br.com.alura.school.section.Section;
+// import br.com.alura.school.section.Section;
 
-import java.util.List;
+// import java.util.List;
 import java.util.Optional;
 
 class CourseResponse {

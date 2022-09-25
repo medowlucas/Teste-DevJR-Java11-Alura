@@ -9,7 +9,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,18 +22,18 @@ public class Video {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @NotBlank(message = "O campo video é obrigatório")
     private String video;
 
     @ManyToOne
-    @JoinColumn(name = "section", nullable = false)
     @JsonIgnore
+    @JoinColumn(name = "section", nullable = false)
     private Section section;
 
+    @Deprecated
     protected Video() { }
 
-    Video(String link) {
-        this.video = link;
+    public Video(String video) {
+        this.video = video;
     }
 
     public Long getId() {
@@ -60,5 +59,5 @@ public class Video {
     public void setSection(Section section) {
         this.section = section;
     }
-
+    
 }
