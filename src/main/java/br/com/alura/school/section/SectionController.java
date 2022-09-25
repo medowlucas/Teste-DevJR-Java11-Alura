@@ -32,7 +32,7 @@ class SectionController {
     }
 
     @GetMapping("/courses/{courseCode}/sections/{sectionCode}")
-    ResponseEntity<SectionResponse> courseByCode(@PathVariable("courseCode") String courseCode, @PathVariable("sectionCode") String sectionCode) {
+    ResponseEntity<SectionResponse> sectionByCode(@PathVariable("courseCode") String courseCode, @PathVariable("sectionCode") String sectionCode) {
         Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("O curso código %s não foi encontrado", courseCode)));
         Section section = sectionRepository.findByCodeAndCourseId(sectionCode, course.getId())
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("A aula código %s não foi encontrada", sectionCode)));
@@ -40,7 +40,7 @@ class SectionController {
     }
 
     @PostMapping("/courses/{code}/sections")
-    ResponseEntity<Void> newCourse(@RequestBody @Valid NewSectionRequest newSectionRequest, @PathVariable("code") String courseCode) {
+    ResponseEntity<Void> newSection(@RequestBody @Valid NewSectionRequest newSectionRequest, @PathVariable("code") String courseCode) {
         Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("O curso código %s não foi encontrado", courseCode)));
         Section section = newSectionRequest.toEntity();
         User user = userRepository.findByUsername(section.getAuthorUsername())

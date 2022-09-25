@@ -7,41 +7,41 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.alura.school.course.Course;
 import br.com.alura.school.user.User;
 
 @Entity
-@Table(uniqueConstraints={ @UniqueConstraint(columnNames = {"user", "course"}) })
+@Table(uniqueConstraints={ @UniqueConstraint(columnNames = {"user_id", "course_id"}) })
 public class Enroll {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column(nullable = false, unique = true)
+    @ManyToOne
+    @JsonIgnore
     private User user;
 
-    @NotBlank
-    @Column(nullable = false, unique = true)
+    @ManyToOne
+    @JsonIgnore
     private Course course;
 
-    @NotBlank
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = false)
     private LocalDateTime enrollDate;
 
     @Deprecated
     protected Enroll() { }
 
-    public Enroll(Long id, User user, Course course, LocalDateTime enrollDate) {
-        this.id = id;
+    public Enroll(User user, Course course) {
         this.user = user;
         this.course = course;
-        this.enrollDate = enrollDate;
+        this.enrollDate = LocalDateTime.now();
     }
 
     public Long getId() {

@@ -32,7 +32,7 @@ class VideoController {
     }
 
     @GetMapping("/video/{sectionCode}")
-    ResponseEntity<VideoResponse> courseByCode(@PathVariable("sectionCode") String sectionCode) {
+    ResponseEntity<VideoResponse> videoByCode(@PathVariable("sectionCode") String sectionCode) {
         Section section = sectionRepository.findByCode(sectionCode).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("A aula código %s não foi encontrada", sectionCode)));
         if (Objects.isNull(section.getVideoList())) {
             throw new ResponseStatusException(NOT_FOUND, format("Não foram encontrados vídeos para essa Aula"));
