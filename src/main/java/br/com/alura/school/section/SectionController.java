@@ -23,7 +23,9 @@ class SectionController {
     private final CourseRepository courseRepository;
     public final UserRepository userRepository;
 
-    SectionController(SectionRepository sectionRepository, CourseRepository courseRepository, UserRepository userRepository) {
+    SectionController(  SectionRepository sectionRepository,
+                        CourseRepository courseRepository,
+                        UserRepository userRepository){
         this.sectionRepository = sectionRepository;
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
@@ -47,7 +49,7 @@ class SectionController {
         if (!user.getUserRole().equals(UserRole.INSTRUCTOR)) {
             throw new ResponseStatusException(NOT_FOUND, format("O autor %s não tem permissão de professor", section.getAuthorUsername()));
         }
-        
+
         section.setCourse(course);
         sectionRepository.save(section);
         URI location = URI.create(format("/courses/%s/sections/%s", courseCode, newSectionRequest.getCode()));

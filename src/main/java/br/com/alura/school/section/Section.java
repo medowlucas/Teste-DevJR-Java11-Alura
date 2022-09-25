@@ -13,6 +13,8 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.alura.school.course.Course;
 import br.com.alura.school.video.Video;
 
@@ -47,6 +49,7 @@ public class Section {
   
     @ManyToOne
     @JoinColumn(name = "course", nullable = false)
+    @JsonIgnore
     private Course course;
 
     public Section() {
