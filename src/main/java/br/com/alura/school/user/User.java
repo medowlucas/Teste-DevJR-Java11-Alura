@@ -44,4 +44,8 @@ public class User {
         return email;
     }
 
+    public UserRole getUserRole() {
+        return role;
+    }
+
 }
