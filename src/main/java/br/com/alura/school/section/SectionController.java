@@ -9,9 +9,6 @@ import br.com.alura.school.course.CourseRepository;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -30,8 +27,7 @@ class SectionController {
     @GetMapping("/courses/{courseCode}/sections/{sectionCode}")
     ResponseEntity<SectionResponse> courseByCode(@PathVariable("courseCode") String courseCode, @PathVariable("sectionCode") String sectionCode) {
         Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("O curso código %s não foi encontrado", courseCode)));;
-        Long courseId = course.getId();
-        Section section = sectionRepository.findByCodeAndCourseId(sectionCode, courseId)
+        Section section = sectionRepository.findByCodeAndCourse(sectionCode, course)
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("A aula código %s não foi encontrada", sectionCode)));
         return ResponseEntity.ok(new SectionResponse(section));
     }
@@ -39,8 +35,7 @@ class SectionController {
     @PostMapping("/courses/{code}/sections")
     ResponseEntity<Void> newCourse(@RequestBody @Valid NewSectionRequest newSectionRequest, @PathVariable("code") String courseCode) {
         Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("O curso código %s não foi encontrado", courseCode)));;
-        Section section = newSectionRequest.toEntity();
-        section.setCourse(course);
+        Section section = newSectionRequest.toEntity(course);
         sectionRepository.save(section);
         URI location = URI.create(format("/courses/%s/sections/%s", courseCode, newSectionRequest.getCode()));
         return ResponseEntity.created(location).build();

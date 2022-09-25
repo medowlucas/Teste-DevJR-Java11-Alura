@@ -11,7 +11,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import br.com.alura.school.course.Course;
-import br.com.alura.school.support.validation.*;
 import br.com.alura.school.video.Video;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -26,32 +25,33 @@ public class Section {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @NotBlank(message = "O campo code é obrigatório")
+    @NotBlank
     @Column(nullable = false, unique = true)
-    // @Unique(entity = Course.class, field = "code", message = "O campo code precisa ser único")
     public String code;
 
-    @NotBlank(message = "O campo title é obrigatório")
+    @NotBlank
     @Size(min=5)
     @Column(nullable = false, unique = true)
     private String title;
     
-    @NotBlank(message = "O campo author é obrigatório")
+    @NotBlank
     private String authorUsername;
 
     @OneToMany(mappedBy = "section", fetch = FetchType.LAZY)
     private List<Video> videoList = new ArrayList<Video>();
 
+  
     @ManyToOne
     private Course course;
 
     public Section() {
     }
 
-    public Section(String code, String title, String authorUsername) {
+    public Section(String code, String title, String authorUsername, Course course) {
         this.code = code;
         this.title = title;
         this.authorUsername = authorUsername;
+        this.course = course;
     }
 
     public Long getId() {

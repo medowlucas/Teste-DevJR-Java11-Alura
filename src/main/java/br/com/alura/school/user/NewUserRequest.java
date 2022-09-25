@@ -10,14 +10,14 @@ import javax.validation.constraints.Size;
 
 class NewUserRequest {
 
-    // @Unique(entity = User.class, field = "username")
+    @Unique(entity = User.class, field = "username", message = "Já existe um usuário com esse username cadastrado")
     @Size(max=20)
-    @NotBlank
+    @NotBlank(message = "O campo username é obrigatório")
     @JsonProperty
     private final String username;
 
-    // @Unique(entity = User.class, field = "email")
-    @NotBlank
+    @Unique(entity = User.class, field = "email", message = "Já existe um usuário com esse email cadastrado")
+    @NotBlank(message = "O campo email é obrigatório")
     @Email
     @JsonProperty
     private final String email;
