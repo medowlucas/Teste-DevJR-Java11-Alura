@@ -9,6 +9,9 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import br.com.alura.school.section.Section;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -35,7 +38,8 @@ public class Course {
 
     private String description;
 
-    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, orphanRemoval = true)
+    @Cascade(CascadeType.ALL)
     private List<Section> sectionList = new ArrayList<Section>();
 
     @Deprecated

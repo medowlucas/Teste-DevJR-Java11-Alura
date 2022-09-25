@@ -3,6 +3,7 @@ package br.com.alura.school.exception;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,4 +22,12 @@ public class ValidatorsExeptionHandler {
         });
         return errorMap;
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public String hanldeDataIntegrityViolationException( DataIntegrityViolationException ex) {
+        return ex.getCause().getMessage();
+    }
+    
+    
 }

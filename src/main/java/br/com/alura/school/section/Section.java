@@ -5,8 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(uniqueConstraints={ @UniqueConstraint(columnNames = {"code", "course"}) }) 
 public class Section {
 
     @Id
@@ -26,12 +30,12 @@ public class Section {
     private Long id;
 
     @NotBlank
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = false)
     public String code;
 
     @NotBlank
     @Size(min=5)
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = false)
     private String title;
     
     @NotBlank
@@ -42,17 +46,18 @@ public class Section {
 
   
     @ManyToOne
+    @JoinColumn(name = "course", nullable = false)
     private Course course;
 
     public Section() {
     }
 
-    public Section(String code, String title, String authorUsername, Course course) {
+    public Section(String code, String title, String authorUsername) {
         this.code = code;
         this.title = title;
         this.authorUsername = authorUsername;
-        this.course = course;
     }
+
 
     public Long getId() {
         return this.id;
@@ -90,8 +95,8 @@ public class Section {
         return this.videoList;
     }
 
-    public void addVideo(Video video) {
-        this.videoList.add(video);
+    public void setVideoList(List<Video> videoList) {
+        this.videoList = videoList;
     }
 
     public Course getCourse() {
@@ -101,5 +106,6 @@ public class Section {
     public void setCourse(Course course) {
         this.course = course;
     }
+
 
 }

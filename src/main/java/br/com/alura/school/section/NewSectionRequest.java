@@ -1,14 +1,11 @@
 package br.com.alura.school.section;
 
-import br.com.alura.school.course.Course;
-import br.com.alura.school.support.validation.Unique;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 class NewSectionRequest {
 
-    @Unique(entity = Section.class, field = "code", message = "O campo code dessa Aula já foi cadastrado no Curso")
     @NotBlank(message="O campo code é obrigatório")
     @JsonProperty
     private final String code;
@@ -32,7 +29,7 @@ class NewSectionRequest {
         return code;
     }
 
-    Section toEntity(Course course) {
-        return new Section(code, title, authorUsername, course);
+    Section toEntity() {
+        return new Section(code, title, authorUsername);
     }
 }

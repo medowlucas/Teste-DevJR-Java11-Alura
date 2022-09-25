@@ -27,7 +27,7 @@ class SectionController {
     @GetMapping("/courses/{courseCode}/sections/{sectionCode}")
     ResponseEntity<SectionResponse> courseByCode(@PathVariable("courseCode") String courseCode, @PathVariable("sectionCode") String sectionCode) {
         Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("O curso código %s não foi encontrado", courseCode)));;
-        Section section = sectionRepository.findByCodeAndCourse(sectionCode, course)
+        Section section = sectionRepository.findByCodeAndCourseId(sectionCode, course.getId())
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("A aula código %s não foi encontrada", sectionCode)));
         return ResponseEntity.ok(new SectionResponse(section));
     }
@@ -35,7 +35,8 @@ class SectionController {
     @PostMapping("/courses/{code}/sections")
     ResponseEntity<Void> newCourse(@RequestBody @Valid NewSectionRequest newSectionRequest, @PathVariable("code") String courseCode) {
         Course course = courseRepository.findByCode(courseCode).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("O curso código %s não foi encontrado", courseCode)));;
-        Section section = newSectionRequest.toEntity(course);
+        Section section = newSectionRequest.toEntity();
+        section.setCourse(course);
         sectionRepository.save(section);
         URI location = URI.create(format("/courses/%s/sections/%s", courseCode, newSectionRequest.getCode()));
         return ResponseEntity.created(location).build();
