@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(uniqueConstraints={ @UniqueConstraint(columnNames = {"video", "section"}) }) 
+@Table(name = "videos", uniqueConstraints={ @UniqueConstraint(columnNames = {"video", "section"}) }) 
 public class Video {
 
     @Id
@@ -27,7 +27,7 @@ public class Video {
     private String video;
 
     @ManyToOne
-    @JoinColumn(name = "videoList", nullable = false)
+    @JoinColumn(name = "section", nullable = false)
     @JsonIgnore
     private Section section;
 
