@@ -51,7 +51,8 @@ public class Section {
     @JsonIgnore
     private Course course;
 
-    public Section() {
+    @Deprecated
+    protected Section() {
     }
 
     public Section(String code, String title, String authorUsername) {
