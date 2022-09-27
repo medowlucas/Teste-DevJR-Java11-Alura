@@ -13,7 +13,8 @@ import br.com.alura.school.user.UserRepository;
 import javax.validation.Valid;
 
 import static java.lang.String.format;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+
+import java.util.Objects;
 
 @RestController
 class EnrollController {
@@ -33,10 +34,16 @@ class EnrollController {
     @PostMapping("/courses/{courseCode}/enroll")
     public ResponseEntity<Void> newEnroll(@RequestBody @Valid NewEnrollRequest newEnrollRequest, @PathVariable("courseCode") String courseCode) {
         Course course = courseRepository.findByCode(courseCode)
-            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("O curso código %s não foi encontrado", courseCode)));
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, format("O curso código %s não foi encontrado", courseCode)));
 
         User user = userRepository.findByUsername(newEnrollRequest.getUsername())
-            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("O username %s não foi encontrado", newEnrollRequest.getUsername())));
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, format("O username %s não foi encontrado", newEnrollRequest.getUsername())));
+
+        Enroll enrollExists = enrollRepository.findFirstByUserAndCourse(user, course);
+
+        if (Objects.nonNull(enrollExists)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         Enroll enroll = new Enroll(user, course);
         enrollRepository.save(enroll);

@@ -40,9 +40,14 @@ class EnrollControllerTest {
 
     @Test
     void should_add_new_enroll() throws Exception {
-        NewEnrollRequest newEnroll = new NewEnrollRequest("ana");
+        final String courseCodeSample = "java-3";
+        final String usernameSample = "janaina";
 
-        mockMvc.perform(post("/courses/{courseCode}/enroll", "java-1")
+        userRepository.save(new User(usernameSample, usernameSample + "@email.com"));
+        courseRepository.save(new Course(courseCodeSample, "Course of " + courseCodeSample, "Java and Object Orientation: Encapsulation, Inheritance and Polymorphism."));
+        NewEnrollRequest newEnroll = new NewEnrollRequest(usernameSample);
+
+        mockMvc.perform(post("/courses/{courseCode}/enroll", courseCodeSample)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMapper.writeValueAsString(newEnroll)))
                 .andDo(print())
@@ -66,15 +71,16 @@ class EnrollControllerTest {
 
     @Test
     void should_not_allow_duplication_of_username_in_same_course() throws Exception {
-        
-        User user = userRepository.findByUsername("alex").get();
-        Course course = courseRepository.findByCode("java-1").get();
+        final String courseCodeSample = "java-4";
+        final String usernameSample = "vanessa";
 
+        User user = userRepository.save(new User(usernameSample, usernameSample + "@email.com"));
+        Course course = courseRepository.save(new Course(courseCodeSample, "Course of " + courseCodeSample, "Java and Object Orientation: Encapsulation, Inheritance and Polymorphism."));
         enrollRepository.save(new Enroll(user, course));
 
-        NewEnrollRequest newEnroll = new NewEnrollRequest("alex");
+        NewEnrollRequest newEnroll = new NewEnrollRequest(usernameSample);
 
-        mockMvc.perform(post("/courses/java-1/enroll")
+        mockMvc.perform(post("/courses/{courseCode}/enroll", courseCodeSample)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMapper.writeValueAsString(newEnroll)))
                 .andDo(print())
