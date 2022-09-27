@@ -13,6 +13,8 @@ import br.com.alura.school.enroll.Enroll;
 import br.com.alura.school.enroll.EnrollRepository;
 import br.com.alura.school.user.User;
 import br.com.alura.school.user.UserRepository;
+import br.com.alura.school.video.Video;
+import br.com.alura.school.video.VideoRepository;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -36,6 +38,9 @@ public class SectionControllerTest {
 
     @Autowired
     private SectionRepository sectionRepository;
+
+    @Autowired
+    private VideoRepository videoRepository;
 
     // @Test
     // void should_add_new_enroll() throws Exception {
@@ -72,7 +77,7 @@ public class SectionControllerTest {
     void should_not_show_duplicated_sections_response_when_has_two_enrolls() throws Exception {
 
         final String sectionTitle = "Aula de testes";
-        final String usernameSample1 = "alex";
+        final String usernameSample1 = "adriana";
         final String usernameSample2 = "malaquias";
         final String courseCode = "java-5";
 
@@ -85,16 +90,20 @@ public class SectionControllerTest {
         section.setCourse(course);
         sectionRepository.save(section);
 
+        Video video = new Video("http://teste.video.com.br");
+        video.setSection(section);
+        videoRepository.save(video);
+
         enrollRepository.save(new Enroll(user1, course));
         enrollRepository.save(new Enroll(user2, course));
 
         mockMvc.perform(get("/sectionByVideosReport"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.courseName", is("Course of " + courseCode)))
-                .andExpect(jsonPath("$.sectionTitle", is(sectionTitle)))
-                .andExpect(jsonPath("$.authorName", is("alex")))
-                .andExpect(jsonPath("$.totalVideos", is(0)));
+                .andExpect(jsonPath("$[0].courseName", is("Course of " + courseCode)))
+                .andExpect(jsonPath("$[0].sectionTitle", is(sectionTitle)))
+                .andExpect(jsonPath("$[0].authorName", is("alex")))
+                .andExpect(jsonPath("$[0].totalVideos", is(1)));
     }
     
 }

@@ -1,5 +1,6 @@
 package br.com.alura.school.section;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -43,7 +44,7 @@ public class Section {
     @NotBlank
     private String authorUsername;
 
-    @OneToMany(mappedBy = "section", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "section", targetEntity = Video.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Video> videoList = new ArrayList<Video>();
 
     @ManyToOne
