@@ -32,11 +32,16 @@ class VideoController {
         this.courseRepository = courseRepository;
     }
 
-    @GetMapping("/video/{sectionCode}")
-    ResponseEntity<VideoResponse> videoByCode(@PathVariable("sectionCode") String sectionCode) {
-        Section section = sectionRepository.findByCode(sectionCode).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("A aula código %s não foi encontrada", sectionCode)));
+    @GetMapping("/course/{courseCode}/video/{sectionCode}")
+    ResponseEntity<VideoResponse> videoByCode(@PathVariable("courseCode") String courseCode, @PathVariable("sectionCode") String sectionCode) {
+        Course course = courseRepository.findByCode(courseCode)
+            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("O curso código %s não foi encontrado", courseCode)));
+
+        Section section = sectionRepository.findByCodeAndCourseId(sectionCode, course.getId())
+            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("A aula código %s não foi encontrada", sectionCode)));
+
         if (Objects.isNull(section.getVideoList())) {
-            throw new ResponseStatusException(NOT_FOUND, format("Não foram encontrados vídeos para essa Aula"));
+            throw new ResponseStatusException(NOT_FOUND, format("Não foram encontrados vídeos para essa Aula e Curso"));
         } 
         return ResponseEntity.ok(new VideoResponse(section));
     }
