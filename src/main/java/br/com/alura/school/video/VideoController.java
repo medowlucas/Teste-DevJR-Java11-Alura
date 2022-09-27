@@ -20,16 +20,17 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RestController
 class VideoController {
 
-    private final VideoRepository videoRepository;
     private final SectionRepository sectionRepository;
     private final CourseRepository courseRepository;
+    private final VideoService videoService;
 
     VideoController(    VideoRepository videoRepository,
                         SectionRepository sectionRepository,
-                        CourseRepository courseRepository) {
-        this.videoRepository = videoRepository;
+                        CourseRepository courseRepository,
+                        VideoService videoService) {
         this.sectionRepository = sectionRepository;
         this.courseRepository = courseRepository;
+        this.videoService = videoService;
     }
 
     @GetMapping("/course/{courseCode}/video/{sectionCode}")
@@ -48,23 +49,22 @@ class VideoController {
 
     @PostMapping("/courses/{courseCode}/sections/{sectionCode}")
     ResponseEntity<Void> newVideo(@RequestBody @Valid NewVideoRequest newVideoRequest, @PathVariable("courseCode") String courseCode, @PathVariable("sectionCode") String sectionCode) {
-        Course course = courseRepository.findByCode(courseCode)
+        Course course = videoService.findCourseByCode(courseCode)
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("O curso código %s não foi encontrado", courseCode)));
 
-        Section section = sectionRepository.findByCodeAndCourseId(sectionCode, course.getId())
+        Section section = videoService.findSectionByCodeAndCourseId(sectionCode, course)
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("A aula código %s não foi encontrada", sectionCode)));
 
         Video video = newVideoRequest.toEntity();
 
-        Video videoExists = videoRepository.findFirstByVideoAndSectionId(newVideoRequest.getVideo(), section.getId());
+        Boolean videoExists = videoService.videoExists(newVideoRequest, section);
 
-        if (Objects.nonNull(videoExists)) {
+        if (videoExists) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        video.setSection(section);
-        videoRepository.save(video);
-        URI location = URI.create(format("/video/%s", video.getSection().getCode()));
-        return ResponseEntity.created(location).build();
+        URI response = videoService.saveVideo(video, section);
+
+        return ResponseEntity.created(response).build();
     }
 }
