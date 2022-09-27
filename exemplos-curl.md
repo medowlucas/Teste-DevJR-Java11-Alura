@@ -73,3 +73,48 @@ Location: /courses/spring-1
 Content-Length: 0
 Date: Sun, 02 May 2021 21:54:14 GMT
 ```
+
+- `POST /courses/{courseCode}/sections` adiciona uma nova aula à um curso
+
+```sh
+curl -i -X POST -H 'Content-type: application/json' -d '{"code": "flutter-cores-dinamicas", "title": "Flutter: Configurando cores dinâmicas": "alex"}' http://localhost:8080/courses/{courseCode}/sections
+```
+
+```txt
+HTTP/1.1 201
+Location: /courses/java-2/sections/flutter-cores-dinamicas
+Content-Length: 0
+Date: Tue, 27 Sep 2022 20:57:59 GMT
+```
+
+- `POST /courses/{courseCode}/sections/{sectionCode}` adiciona um novo vídeo à uma aula
+
+```sh
+curl -i -X POST -H 'Content-type: application/json' -d '{"video": "https://www.youtube.com/watch?v=gI4-vj0WpKM"}' http://localhost:8080/courses/{courseCode}/sections/{sectionCode}
+```
+
+```txt
+HTTP/1.1 201
+Location: /video/flutter-cores-dinamicas
+Content-Length: 0
+Date: Tue, 27 Sep 2022 20:57:59 GMT
+```
+
+- `POST /courses/{courseCode}/enroll` aplica uma nova matrícula em um curso
+
+```sh
+curl -i -X POST -H 'Content-type: application/json' -d '{"username": "alex"}' http://localhost:8080/courses/{courseCode}/enroll
+```
+
+
+- `GET /sectionByVideosReport` lista a quantidade de vídeos por aula em cursos com matriculados
+
+```sh
+curl -i http://localhost:8080/sectionByVideosReport
+```
+
+```txt
+HTTP/1.1 200 
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Tue, 27 Sep 2022 20:57:59 GMT
