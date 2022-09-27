@@ -13,6 +13,7 @@ import br.com.alura.school.user.User;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import java.util.Objects;
 
 import static java.lang.String.format;
@@ -23,14 +24,17 @@ class SectionController {
 
     private final SectionRepository sectionRepository;
     private final CourseRepository courseRepository;
-    public final UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final SectionService sectionService;
 
     SectionController(  SectionRepository sectionRepository,
                         CourseRepository courseRepository,
-                        UserRepository userRepository){
+                        UserRepository userRepository,
+                        SectionService sectionService){
         this.sectionRepository = sectionRepository;
         this.courseRepository = courseRepository;
         this.userRepository = userRepository;
+        this.sectionService = sectionService;
     }
 
     @GetMapping("/courses/{courseCode}/sections/{sectionCode}")
@@ -39,6 +43,18 @@ class SectionController {
         Section section = sectionRepository.findByCodeAndCourseId(sectionCode, course.getId())
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("A aula código %s não foi encontrada", sectionCode)));
         return ResponseEntity.ok(new SectionResponse(section));
+    }
+    
+    @GetMapping("/sectionByVideosReport")
+    ResponseEntity<List<SectionReportByVideos>> sectionByVideosReport() {
+        List<Section> sections = sectionService.SectionByCoursesWithEnrolls();
+
+        if (sections.size() == 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
+        List<SectionReportByVideos> sectionReportByVideos = sectionService.getSectionReportByVideos(sections);
+        return ResponseEntity.ok(sectionReportByVideos);
     }
 
     @PostMapping("/courses/{code}/sections")

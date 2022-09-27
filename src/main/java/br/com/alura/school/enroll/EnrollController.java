@@ -39,7 +39,7 @@ class EnrollController {
         User user = userRepository.findByUsername(newEnrollRequest.getUsername())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, format("O username %s não foi encontrado", newEnrollRequest.getUsername())));
 
-        Enroll enrollExists = enrollRepository.findFirstByUserAndCourse(user, course);
+        Enroll enrollExists = enrollRepository.findFirstByUserIdAndCourseId(user.getId(), course.getId());
 
         if (Objects.nonNull(enrollExists)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
