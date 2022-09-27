@@ -1,5 +1,6 @@
 package br.com.alura.school.section;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,6 +13,7 @@ import br.com.alura.school.user.User;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Objects;
 
 import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -48,6 +50,12 @@ class SectionController {
 
         if (!user.getUserRole().equals(UserRole.INSTRUCTOR)) {
             throw new ResponseStatusException(NOT_FOUND, format("O autor %s não tem permissão de professor", section.getAuthorUsername()));
+        }
+
+        Section sectionExists = sectionRepository.findFirstByCodeAndCourse(section.getCode(), course);
+
+        if (Objects.nonNull(sectionExists)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         section.setCourse(course);

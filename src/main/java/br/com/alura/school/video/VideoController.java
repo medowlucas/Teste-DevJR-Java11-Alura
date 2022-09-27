@@ -1,5 +1,6 @@
 package br.com.alura.school.video;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -44,9 +45,18 @@ class VideoController {
     ResponseEntity<Void> newVideo(@RequestBody @Valid NewVideoRequest newVideoRequest, @PathVariable("courseCode") String courseCode, @PathVariable("sectionCode") String sectionCode) {
         Course course = courseRepository.findByCode(courseCode)
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("O curso código %s não foi encontrado", courseCode)));
+
         Section section = sectionRepository.findByCodeAndCourseId(sectionCode, course.getId())
             .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("A aula código %s não foi encontrada", sectionCode)));
+
         Video video = newVideoRequest.toEntity();
+
+        Video videoExists = videoRepository.findFirstByVideoAndSectionId(newVideoRequest.getVideo(), section.getId());
+
+        if (Objects.nonNull(videoExists)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
         video.setSection(section);
         videoRepository.save(video);
         URI location = URI.create(format("/video/%s", video.getSection().getCode()));

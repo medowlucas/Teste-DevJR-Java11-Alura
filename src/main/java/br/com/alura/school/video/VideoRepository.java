@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 interface VideoRepository extends JpaRepository<Video, Long> {
-    Optional<Video> findByVideoAndSectionId(String video, Long SectionId);
+    
+    Video findFirstByVideoAndSectionId(String video, Long SectionId);
 
     Optional<List<Video>> findAllBySectionId(Long sectionId);
 
