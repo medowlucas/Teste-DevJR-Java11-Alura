@@ -2,8 +2,8 @@ package br.com.alura.school.section;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +39,10 @@ public class SectionService {
         return sections.stream()
         .map(SectionReportByVideos::new)
         .collect(Collectors.toList());
+    }
+
+    public Set<Course> findAllCourses() {
+        return enrollRepository.findAllCourses();
     }
     
 }

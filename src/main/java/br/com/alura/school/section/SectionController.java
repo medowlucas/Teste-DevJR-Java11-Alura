@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -55,6 +56,11 @@ class SectionController {
 
         List<SectionReportByVideos> sectionReportByVideos = sectionService.getSectionReportByVideos(sections);
         return ResponseEntity.ok(sectionReportByVideos);
+    }
+
+    @GetMapping("/sectionByVideosReport2")
+    Set<Course> getCourses() {
+        return sectionService.findAllCourses();
     }
 
     @PostMapping("/courses/{code}/sections")
