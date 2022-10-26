@@ -14,7 +14,7 @@ import br.com.alura.school.user.User;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -68,9 +68,9 @@ class SectionController {
             throw new ResponseStatusException(NOT_FOUND, format("O autor %s não tem permissão de professor", section.getAuthorUsername()));
         }
 
-        Section sectionExists = sectionRepository.findFirstByCodeAndCourse(section.getCode(), course);
+        Optional<Section> sectionExists = sectionRepository.findFirstByCodeAndCourse(section.getCode(), course);
 
-        if (Objects.nonNull(sectionExists)) {
+        if (sectionExists.isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 

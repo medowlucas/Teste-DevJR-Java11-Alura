@@ -28,7 +28,7 @@ public class SectionService {
 
         for(Course course : allCourses) {
             Optional<Enroll> courseEnroll = enrollRepository.findFirstByCourseId(course.getId());
-            if (Objects.nonNull(courseEnroll)) {
+            if (courseEnroll.isPresent()) {
                 sectionReports.addAll(course.getSectionList());
             }  
         }

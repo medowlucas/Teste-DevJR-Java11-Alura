@@ -11,5 +11,5 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
 
     Optional<Section> findByCodeAndCourseId(String code, Long courseId);
 
-    Section findFirstByCodeAndCourse(String code, Course course);
+    Optional<Section> findFirstByCodeAndCourse(String code, Course course);
 }

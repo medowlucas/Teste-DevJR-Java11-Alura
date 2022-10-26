@@ -36,9 +36,9 @@ public class VideoService {
     }
 
     public Boolean videoExists(NewVideoRequest newVideoRequest, Section section) {
-        Video videoExists = videoRepository.findFirstByVideoAndSectionId(newVideoRequest.getVideo(), section.getId());
+        Optional<Video> videoExists = videoRepository.findFirstByVideoAndSectionId(newVideoRequest.getVideo(), section.getId());
         
-        return Objects.nonNull(videoExists);
+        return videoExists.isPresent();
     }
 
     public URI saveVideo(Video video, Section section) {

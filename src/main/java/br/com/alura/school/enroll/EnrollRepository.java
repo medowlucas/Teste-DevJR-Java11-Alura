@@ -9,5 +9,5 @@ public interface EnrollRepository extends JpaRepository<Enroll, Long> {
 
     Optional<Enroll> findFirstByCourseId(Long courseId);
 
-    Enroll findFirstByUserIdAndCourseId(Long userId, Long courseId);
+    Optional<Enroll> findFirstByUserIdAndCourseId(Long userId, Long courseId);
 }
